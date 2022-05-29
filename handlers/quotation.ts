@@ -1,12 +1,33 @@
 import type { Context } from "https://deno.land/x/oak@v10.6.0/mod.ts";
 import { getQuery } from "https://deno.land/x/oak@v10.6.0/helpers.ts";
+import { customAlphabet } from "https://deno.land/x/nanoid@v3.0.0/mod.ts";
+import { redis } from "../utils/redis.ts";
 
-export const getQuotationById = (ctx: Context) => {
-  console.log(getQuery(ctx, { mergeParams: true }));
-  ctx.response.body = { quotation: "getById" };
+export const getQuotationById = async (ctx: Context) => {
+  const { id } = getQuery(ctx, { mergeParams: true });
+  const quotation = await redis.get(id);
+  ctx.response.body = JSON.parse(quotation as string);
 };
 
 export const createQuotations = async (ctx: Context) => {
-  console.log(await ctx.request.body().value);
-  ctx.response.body = { quotation: "createQuotations" };
+  const now = Date.now();
+  const duration = 5 * 60 * 1000;
+  const expireAt = new Date(now + duration).toISOString();
+  const body = await ctx.request.body().value;
+  const quotations = await Promise.all(
+    body.map(async (quotation: Record<string, unknown>) => {
+      const quotationId = await customAlphabet("0123456789", 12)();
+      return {
+        ...quotation,
+        quotationId,
+        expireAt,
+      };
+    }),
+  );
+  await Promise.all(
+    quotations.map((q: Record<string, unknown>) =>
+      redis.set(q.quotationId as string, JSON.stringify(q))
+    ),
+  );
+  ctx.response.body = quotations;
 };
