@@ -1,0 +1,221 @@
+openapi: 3.0.0
+paths:
+  /quotations/{id}:
+    get:
+      operationId: QuotationsController_getQuotationById
+      summary: GetQuotationById
+      description: |-
+        __Key Points__:
+        - get quotation by quotation Id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          example: '182379172831'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotationBaseDto'
+  /quotations:
+    post:
+      operationId: QuotationsController_postQuotations
+      summary: PostQuotations
+      description: |-
+        __Key Points__:
+        - batch create quotations
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/QuotationsPostReqDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuotationBaseDto'
+info:
+  title: NestJS Self Challenge API API
+  description: An API to get quotation information
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    QuotationStopCoordinatesDto:
+      type: object
+      properties:
+        lat:
+          type: string
+          example: '22.335313'
+          description: should range between -90 and 90 with a max 6 decimals
+          format: ^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$
+        lng:
+          type: string
+          example: '114.175840'
+          description: should range between -180 and 180 with a max 6 decimals
+          format: ^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$
+      required:
+        - lat
+        - lng
+    QuotationStopDto:
+      type: object
+      properties:
+        coordinates:
+          example:
+            lat: '22.335313'
+            lng: '114.175840'
+          allOf:
+            - $ref: '#/components/schemas/QuotationStopCoordinatesDto'
+        address:
+          type: string
+          example: 999 Prince Edward Road
+      required:
+        - address
+    QuotationBaseItemDto:
+      type: object
+      properties:
+        quantity:
+          type: number
+          example: 1
+        weight:
+          type: number
+          example: 1
+        categories:
+          example:
+            - test
+          type: array
+          items:
+            type: string
+        handlingInstructions:
+          example:
+            - test
+          type: array
+          items:
+            type: string
+      required:
+        - quantity
+        - weight
+        - categories
+        - handlingInstructions
+    QuotationBaseDto:
+      type: object
+      properties:
+        quotationId:
+          type: string
+          example: '182379172831'
+        expireAt:
+          type: string
+          example: '2022-05-21T01:00:00.000Z'
+          format: date-time
+        scheduleAt:
+          type: string
+          example: '2022-05-21T00:00:00.000Z'
+          format: date-time
+        deliveryBy:
+          type: string
+          example: '2022-05-21T01:00:00.000Z'
+          format: date-time
+        location:
+          type: string
+          example: Hong Kong
+          format: date-time
+        stops:
+          example:
+            - coordinates:
+                lat: '22.335313'
+                lng: '114.175840'
+              address: 999 Prince Edward Road
+            - coordinates:
+                lat: '22.335313'
+                lng: '114.175840'
+              address: InnoCentre, 72 Tat Chee Avenue
+          description: pickup and dropoff stops
+          minItems: 2
+          maxItems: 2
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotationStopDto'
+        item:
+          example:
+            quantity: 1
+            weight: 1
+            categories:
+              - test
+            handlingInstructions:
+              - test
+          allOf:
+            - $ref: '#/components/schemas/QuotationBaseItemDto'
+      required:
+        - quotationId
+        - expireAt
+        - scheduleAt
+        - deliveryBy
+        - location
+        - stops
+        - item
+    QuotationsPostReqDto:
+      type: object
+      properties:
+        scheduleAt:
+          type: string
+          example: '2022-05-21T00:00:00.000Z'
+          format: date-time
+        deliveryBy:
+          type: string
+          example: '2022-05-21T01:00:00.000Z'
+          format: date-time
+        location:
+          type: string
+          example: Hong Kong
+          format: date-time
+        stops:
+          example:
+            - coordinates:
+                lat: '22.335313'
+                lng: '114.175840'
+              address: 999 Prince Edward Road
+            - coordinates:
+                lat: '22.335313'
+                lng: '114.175840'
+              address: InnoCentre, 72 Tat Chee Avenue
+          description: pickup and dropoff stops
+          minItems: 2
+          maxItems: 2
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotationStopDto'
+        item:
+          example:
+            quantity: 1
+            weight: 1
+            categories:
+              - test
+            handlingInstructions:
+              - test
+          allOf:
+            - $ref: '#/components/schemas/QuotationBaseItemDto'
+      required:
+        - scheduleAt
+        - deliveryBy
+        - location
+        - stops
+        - item
