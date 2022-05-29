@@ -3,5 +3,7 @@
   "deno.lint": true,
   "deno.unstable": true,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "denoland.vscode-deno"
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2
 }
