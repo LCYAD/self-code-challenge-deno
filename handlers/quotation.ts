@@ -6,7 +6,18 @@ import { redis } from "../utils/redis.ts";
 export const getQuotationById = async (ctx: Context) => {
   const { id } = getQuery(ctx, { mergeParams: true });
   const quotation = await redis.get(id);
-  ctx.response.body = JSON.parse(quotation as string);
+  if (!quotation) {
+    ctx.throw(
+      404,
+      JSON.stringify({
+        "code": "10004",
+        "message": "RESOURCES_NOT_FOUND",
+        "detail": "Quotation not found",
+      }),
+    );
+  } else {
+    ctx.response.body = JSON.parse(quotation as string);
+  }
 };
 
 export const createQuotations = async (ctx: Context) => {
