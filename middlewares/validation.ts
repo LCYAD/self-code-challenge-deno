@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import type {
   Context,
   Middleware,
@@ -6,6 +5,7 @@ import type {
 import { Status } from "https://deno.land/x/oak@v10.6.0/mod.ts";
 import { z } from "https://deno.land/x/zod@v3.17.3/mod.ts";
 import { getQuery } from "https://deno.land/x/oak@v10.6.0/helpers.ts";
+import { generateErrorMessage } from "../utils/error.ts";
 
 export const validateParams = <T>(schema: z.ZodType<T>): Middleware =>
   (ctx: Context, next) => {
@@ -16,29 +16,22 @@ export const validateParams = <T>(schema: z.ZodType<T>): Middleware =>
     } catch (e) {
       ctx.throw(
         Status.UnprocessableEntity,
-        JSON.stringify({
-          "code": "10003",
-          "message": "VALIDATION_ERROR",
-          "detail": e.issues,
-        }),
+        generateErrorMessage("10003", e.issues),
       );
     }
   };
 
 export const validateBody = <T>(schema: z.ZodType<T>): Middleware =>
-  (ctx: Context, next) => {
+  async (ctx: Context, next) => {
+    const body = await ctx.request.body().value;
     try {
-      const result = schema.parse(ctx.request.body);
-      ctx.request.body = result as any;
+      const result = schema.parse(body);
+      ctx.state.parsedBody = result;
       return next();
     } catch (e) {
       ctx.throw(
         Status.UnprocessableEntity,
-        JSON.stringify({
-          "code": "10003",
-          "message": "VALIDATION_ERROR",
-          "detail": e.issues,
-        }),
+        generateErrorMessage("10003", e.issues),
       );
     }
   };
