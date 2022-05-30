@@ -21,3 +21,13 @@ docker-compose -f docker-compose-ldev.yml up -d
 # To close the services
 docker-compose -f docker-compose-ldev.yml down
 ```
+
+## Debugging (VSCode only)
+
+- First, start the service by running
+
+```bash
+deno run --inspect-brk -A main.ts
+```
+
+- Afterward, launch the `Deno (Attach)` script in VSCode
