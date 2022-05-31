@@ -1,3 +1,4 @@
+import { Status } from "https://deno.land/x/oak@v10.6.0/mod.ts";
 import type { Context } from "https://deno.land/x/oak@v10.6.0/mod.ts";
 import { getQuery } from "https://deno.land/x/oak@v10.6.0/helpers.ts";
 import { customAlphabet } from "https://deno.land/x/nanoid@v3.0.0/mod.ts";
@@ -9,7 +10,7 @@ export const getQuotationById = async (ctx: Context) => {
   const quotation = await redis.get(id);
   if (!quotation) {
     ctx.throw(
-      404,
+      Status.NotFound,
       generateErrorMessage("10004", "Quotation not found"),
     );
   } else {
@@ -37,5 +38,6 @@ export const createQuotations = async (ctx: Context) => {
       redis.set(q.quotationId as string, JSON.stringify(q))
     ),
   );
+  ctx.response.status = Status.Created;
   ctx.response.body = quotations;
 };

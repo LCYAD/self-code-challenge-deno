@@ -4,6 +4,7 @@
     "ldev:services:down": "docker-compose -f docker-compose-ldev.yml down",
     "start:dev": "deno run --allow-net --allow-read --allow-env --watch main.ts",
     "start:inspect": "deno run --inspect-brk -A main.ts",
-    "test:unit": "deno test --import-map=unit.test.importmap.json"
+    "test:unit": "deno test --import-map=unit.test.importmap.json ./__tests__/unit/",
+    "test:integration": "deno test --allow-net --import-map=integration.test.importmap.json ./__tests__/integration/"
   }
 }
