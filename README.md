@@ -45,3 +45,9 @@ deno task start:inspect
 # Unit Test
 deno task test:unit
 ```
+
+## Still missing
+
+- Some unit test
+- proper logging
+- metrics / telemetry data export setup
