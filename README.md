@@ -22,6 +22,16 @@ docker-compose -f docker-compose-ldev.yml up -d
 docker-compose -f docker-compose-ldev.yml down
 ```
 
+## Run the service on local
+
+```bash
+# Without watch mode
+deno run --allow-net --allow-read --allow-env main.ts  
+
+# With watch mode (like nodemon)
+deno run --allow-net --allow-read --allow-env --watch main.ts
+```
+
 ## Debugging (VSCode only)
 
 - First, start the service by running
