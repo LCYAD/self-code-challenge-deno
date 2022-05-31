@@ -38,3 +38,10 @@ deno task start:inspect
 ```
 
 - Afterward, launch the `Deno (Attach)` script in VSCode
+
+## Test
+
+```bash
+# Unit Test
+deno task test:unit
+```
