@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "ldev:services:up": "docker-compose -f docker-compose-ldev.yml up -d",
+    "ldev:services:down": "docker-compose -f docker-compose-ldev.yml down",
+    "start:dev": "deno run --allow-net --allow-read --allow-env --watch main.ts",
+    "start:inspect": "deno run --inspect-brk -A main.ts"
+  }
+}

@@ -10,34 +10,31 @@ the self code challenge described in this
 
 - Things to install
   - [Deno](https://deno.land/manual/getting_started/installation)
-  - docker-compose
+  - Docker and docker-compose
 
 ## Setup Services
 
 ```bash
 # To boot up the services
-docker-compose -f docker-compose-ldev.yml up -d
+deno task ldev:services:up
 
 # To close the services
-docker-compose -f docker-compose-ldev.yml down
+deno task ldev:services:down
 ```
 
 ## Run the service on local
 
 ```bash
-# Without watch mode
-deno run --allow-net --allow-read --allow-env main.ts  
-
 # With watch mode (like nodemon)
-deno run --allow-net --allow-read --allow-env --watch main.ts
+deno task start:dev
 ```
 
 ## Debugging (VSCode only)
 
-- First, start the service by running
+- First, start the service by running (include bringing up the other services)
 
 ```bash
-deno run --inspect-brk -A main.ts
+deno task start:inspect
 ```
 
 - Afterward, launch the `Deno (Attach)` script in VSCode
